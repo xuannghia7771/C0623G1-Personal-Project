@@ -8,8 +8,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Repository
 public interface IAppUserRepository extends JpaRepository<AppUser, Long> {
+
+    Optional<AppUser> findAppUserByUsername(String username);
+
     @Transactional
     @Query(value = "SELECT * FROM biker_care.app_user WHERE " +
             "username = :username and flag_deleted = false",nativeQuery = true)

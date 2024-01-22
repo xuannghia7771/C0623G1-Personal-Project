@@ -25,6 +25,7 @@ import Swal from "sweetalert2";
 const SignIn = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showLoader, setShowLoader] = useState(false);
+    const [userName, setUserName] = useState("");
 
     const navigate = useNavigate();
     const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -45,9 +46,10 @@ const SignIn = () => {
                     Swal.fire({
                         title: "Đăng nhập thành công",
                         icon: "success",
-                        timer: 2000
+                        timer: 4000
                     })
                     navigate(`/home`);
+                    window.location.reload();
                 }
             } catch (err) {
                 Swal.fire({
@@ -60,12 +62,23 @@ const SignIn = () => {
             }
         }
     };
+
+    const getUserName = async () => {
+        const result = await userService.infoAppUserByJwtToken();
+        setUserName(result);
+    }
+
+    useEffect(() => {
+        getUserName()
+    }, [userName]);
+
     useEffect(() => {
         const JwtToken = userService.infoAppUserByJwtToken();
         if (JwtToken) {
             navigate(`/home`);
+            // window.location.reload();
         }
-    }, []);
+    }, [userName]);
 
     return (
         <>

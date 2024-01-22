@@ -18,10 +18,19 @@ export const registerUser = async (appUser) => {
 export const infoAppUserByJwtToken = () => {
     const jwtToken = localStorage.getItem("JWT");
     if (jwtToken) {
-        const result = jwtDecode(jwtToken);
+        const result = jwtDecode(jwtToken).sub;
         return result;
     }
 }
+
+export const getAccessToken = () => {
+    const jwt = localStorage.getItem("JWT");
+    if (jwt) {
+        return jwt;
+    } else {
+        return null;
+    }
+};
 
 export const getIdByUserName = async (userName) => {
     const result = await axios.get(`http://localhost:8080/api/user/id-user/${userName}`);

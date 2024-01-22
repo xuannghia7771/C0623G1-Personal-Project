@@ -25,4 +25,10 @@ public class CartDetail {
     @ManyToOne
     @JoinColumn(name = "id_product", referencedColumnName = "idProduct")
     private Product product;
+
+    public CartDetail(Integer quantityPerProduct, AppUser appUser, Product product) {
+        this.quantityPerProduct = quantityPerProduct;
+        this.appUser = appUser;
+        this.product = product;
+    }
 }

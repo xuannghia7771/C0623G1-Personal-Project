@@ -1,0 +1,107 @@
+.product-detail-wrapper {
+    position: relative;
+    display: block;
+    top: 89px;
+    margin-bottom: 10%;
+}
+
+.detail-title {
+    padding-top: 2%;
+    text-align: center;
+    color: #5e5c4d;
+    font-size: 30px;
+    font-weight: bold;
+    font-family: 'Lora', cursive;
+}
+
+.product-detail {
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    color: #c27a6b;
+    font-size: 18px;
+}
+
+.product-detail-img {
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+    border-radius: 15px;
+    outline: none;
+    border: none;
+}
+
+.product-des-content {
+    box-sizing: border-box;
+    color: #c27a6b;
+    font-style: oblique;
+}
+
+.quantity-btn-minus, .quantity-btn-addition {
+    padding: 0;
+    box-sizing: border-box;
+    background-color: white;
+    color: #e7bab0;
+    border: 1px solid #e7bab0;
+    border-radius: 3px;
+    width: 40px;
+    height: 40px;
+    font-weight: bolder;
+}
+
+.quantity-btn-minus:hover, .quantity-btn-addition:hover, .add-to-cart-btn:hover {
+    background-color: #e7bab0;
+    color: #5e5c4d;
+}
+
+.quantity-input {
+    box-sizing: border-box;
+    outline: #3bb77e;
+    border: 1px solid;
+    border-radius: 3px;
+    width: 80px;
+    text-align: center;
+    color: #3bb77e;
+    height: 60px;
+    font-weight: bolder;
+}
+
+.add-to-cart-btn {
+    box-sizing: border-box;
+    background-color: white;
+    color: #e7bab0;
+    border: 1px solid #e7bab0;
+    height: 40px;
+    border-radius: 5px;
+    transition: .1s ease;
+    margin-bottom: 5vh;
+}
+
+.add-to-cart-btn:hover {
+    color: #5e5c4d;
+}
+
+.back-to-main-page-link {
+    color: #282c34;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.back-to-main-page-link:hover {
+    text-decoration: underline #282c34;
+}
+
+@media screen and (max-width: 1024px) {
+    .product-detail-wrapper {
+        min-height: 70vh;
+    }
+    .product-des {
+        padding-top: 5%;
+    }
+}
+@media screen and (max-width: 720px) {
+    .product-detail-wrapper {
+        top: 100px;
+    }
+    .product-des {
+        padding-top: 7%;
+        text-align: center;
+    }
+}

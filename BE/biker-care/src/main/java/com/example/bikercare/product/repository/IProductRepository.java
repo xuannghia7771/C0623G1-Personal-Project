@@ -1,8 +1,5 @@
 package com.example.bikercare.product.repository;
-import com.example.bikercare.product.dto.IImageDto;
-import com.example.bikercare.product.dto.IProductDto;
-import com.example.bikercare.product.dto.IProductForDetail;
-import com.example.bikercare.product.dto.IProductWithImage;
+import com.example.bikercare.product.dto.*;
 import com.example.bikercare.product.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,28 +39,7 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
             " WHERE p.flag_deleted = false " +
             "GROUP BY " +
             "p.id_product, p.code_product, p.name_product, p.price, p.description, t.name_type", nativeQuery = true)
-    Page<IProductDto> findAllProduct(Pageable pageable, @Param("search") String search);
-
-    @Query(value = PREFIX_SEARCH_NOT_PRICE +
-            " WHERE p.flag_deleted = false" +
-            " AND p.code_product like CONCAT('%', :codeProduct ,'%')" +
-            " GROUP BY" +
-            " p.id_product, p.code_product, p.name_product, p.price, p.description, t.name_type",nativeQuery = true)
-    Page<IProductDto> searchCode(@Param("codeProduct") String codeProduct, Pageable pageable);
-
-    @Query(value =PREFIX_SEARCH_NOT_PRICE +
-            " WHERE p.flag_deleted = false " +
-            "AND p.name_product LIKE CONCAT('%', :nameProduct ,'%') " +
-            "GROUP BY " +
-            "p.id_product, p.code_product, p.name_product, p.price, p.description, t.name_type",nativeQuery = true)
-    Page<IProductDto> searchNameProduct(@Param("nameProduct") String nameProduct, Pageable pageable);
-
-    @Query(value = PREFIX_SEARCH_NOT_PRICE +
-            " WHERE p.flag_deleted = false " +
-            "AND t.name_type LIKE CONCAT('%', :nameType ,'%') " +
-            "GROUP BY " +
-            "p.id_product, p.code_product, p.name_product, p.price, p.description, t.name_type",nativeQuery = true)
-    Page<IProductDto> searchTypeProduct(@Param("nameType") String nameType, Pageable pageable);
+    Page<IProductDto> getAllProductForHomePage(Pageable pageable, @Param("search") String search);
 
     @Query(value = PREFIX_SEARCH_NOT_PRICE +
             " WHERE p.flag_deleted = false " +
@@ -79,14 +55,14 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
             "p.id_product, p.code_product, p.name_product, p.price, p.description, t.name_type",nativeQuery = true)
     Page<IProductDto> searchWithSmallerThanOrEqualPrice(@Param("priceProduct") Float priceProduct, Pageable pageable);
 
-    @Query(value = "SELECT DISTINCT p.id_product AS idProduct, p.name_product AS productName, " +
-            "p.price AS productPrice, p.description as productDescription, " +
-            "MIN(i.image_path) AS productImage " +
-            "FROM product p " +
-            "JOIN image i ON p.id_product = i.id_product " +
-            "WHERE p.name_product like CONCAT('%',:nameSearch,'%') " +
-            "GROUP BY p.id_product ", nativeQuery = true)
-    List<IProductWithImage> findAllProduct(@Param("nameSearch") String nameSearch);
+    @Query(value = "SELECT DISTINCT p.id_product AS idProduct, p.name_product AS productName,\n" +
+            "p.price AS productPrice, p.description as productDescription,\n" +
+            "MIN(i.image_path) AS productImage\n" +
+            "FROM product p\n" +
+            "LEFT JOIN image i ON p.id_product = i.id_product\n" +
+            "WHERE p.name_product like CONCAT('%','','%')\n" +
+            "GROUP BY p.id_product ORDER BY p.id_product desc LIMIT 10", nativeQuery = true)
+    List<IProductWithImage> getAllProductForHomePage(@Param("nameSearch") String nameSearch);
 
     boolean existsByIdProductAndFlagDeletedIsFalse(Long idProduct);
 
@@ -108,4 +84,24 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
             "from image " +
             "where id_product = :id", nativeQuery = true)
     List<IImageDto> getAllImageByProductId(@Param("id") Long idProduct);
+
+    @Query(value = "SELECT DISTINCT p.id_product AS idProduct, p.name_product AS productName, " +
+            "p.price AS productPrice, p.description as productDescription, " +
+            "MIN(i.image_path) AS productImage, t.name_type AS productTypeName, p.id_type AS idType " +
+            "FROM product p " +
+            "JOIN type_product t ON t.id_type = p.id_type " +
+            "LEFT JOIN image i ON p.id_product = i.id_product " +
+            "WHERE p.name_product like CONCAT('%',:nameProduct,'%') " +
+            "AND t.name_type like CONCAT('%',:nameType,'%') " +
+            "GROUP BY p.id_product", nativeQuery = true)
+    Page<ProductForListingPageDto> getAllProductWithFilter(@Param("nameProduct") String nameProduct, @Param("nameType") String nameType, Pageable pageable);
+
+    @Query(value = "SELECT DISTINCT p.id_product AS idProduct, p.name_product AS productName, \n" +
+            "p.price AS productPrice, p.description as productDescription, \n" +
+            "MIN(i.image_path) AS productImage \n" +
+            "FROM product p \n" +
+            "LEFT JOIN image i ON p.id_product = i.id_product \n" +
+            "WHERE p.id_type = :idType\n" +
+            "GROUP BY p.id_product, p.name_product", nativeQuery = true)
+    List<IProductWithImage> getProductByIdType(@Param("idType") Long idType);
 }

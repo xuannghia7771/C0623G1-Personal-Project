@@ -15,6 +15,7 @@ import Box from '@mui/material/Box';
 
 import RangeSlider from 'react-range-slider-input';
 import 'react-range-slider-input/dist/style.css';
+import SearchIcon from "@mui/icons-material/Search";
 
 function valuetext(value) {
     return `${value}°C`;
@@ -30,6 +31,16 @@ const Sidebar = () => {
     return (
         <>
             <div className="sidebar">
+                <div className="card border-0 shadow">
+                    <h3>Tìm kiếm</h3>
+
+                    <div className='search'>
+                        <input type='text' placeholder='Tên sản phẩm...' />
+                        <SearchIcon className="searchIcon cursor" />
+                    </div>
+
+                </div>
+
                 <div className="card border-0 shadow">
                     <h3>Loại Sản Phẩm</h3>
 

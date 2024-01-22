@@ -6,7 +6,6 @@ import Product from '../../components/product';
 import Banner4 from '../../assets/images/banner4.jpg';
 
 import Slider from "react-slick";
-import TopProducts from './TopProducts';
 import axios from 'axios';
 import {Link} from "react-router-dom";
 import * as userService from "../../service/product/ProductService";
@@ -32,7 +31,6 @@ const Home = (props) => {
 
     const [nameSearch, setNameSearch] = useState("")
 
-    const pattern = /^[a-zA-Z0-9\sàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]+$/;
 
     var settings = {
         dots: false,
@@ -46,24 +44,20 @@ const Home = (props) => {
 
     useEffect(() => {
         getAllProduct();
-    }, [nameSearch]);
+    }, []);
 
     const getAllProduct = async () => {
-        const result = await userService.getAllProduct(nameSearch);
-        // console.log(result.data)
-        setAllProduct(result.data);
-    }
-
-    const handleSearch = () => {
-        console.log(nameSearch)
-    }
-
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            handleSearch();
+        try {
+            const result = await userService.getAllProduct(nameSearch);
+            // console.log(result.data)
+            if (result.status === 200) {
+                setAllProduct(result.data);
+            }
+        } catch (e) {
+            alert("Không tìm thấy dữ liệu trả về. Lỗi: " + e.error);
         }
     }
+
 
     return (
         <div style={{display: 'block'}}>
@@ -74,67 +68,41 @@ const Home = (props) => {
             <section className='homeProducts homeProductWrapper'>
                 <div className='container-fluid'>
                     <div className='d-flex align-items-center homeProductsTitleWrap'>
-                        <div className='selectDropWrapper cursor position-relative'>
-                            <div className='selectDrop'>
-                                <div className='searchField'>
-                                    <input type='text'
-                                           placeholder='Tên sản phẩm ...'
-                                           onChange={(e) => setNameSearch(e.target.value)}
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                        <h2 className='hd mb-0 mt-0 res-full'>Sản phẩm mới nhất</h2>
                     </div>
 
                     <div className="row productRow">
                         {
-                            allProduct &&
+                            allProduct !== undefined ?
                             allProduct?.map((e) => (
                                 <div className="item">
                                     <div className='productThumb' key={e.idProduct}>
-                                        <div className="imgWrapper">
-                                            <img
-                                                src={e.productImage}
-                                                alt="" className="w-100"/>
-
-                                            <div className='overlay transition'>
-                                                <ul className='list list-inline mb-0'>
-                                                    <li className='list-inline-item'>
-                                                        <a className='cursor' tooltip="Add to Wishlist">
-                                                            <FavoriteBorderOutlinedIcon/>
-                                                        </a>
-                                                    </li>
-                                                    <li className='list-inline-item'>
-                                                        <a className='cursor' tooltip="Compare">
-                                                            <CompareArrowsOutlinedIcon/>
-                                                        </a>
-                                                    </li>
-                                                    <li className='list-inline-item'>
-                                                        <a className='cursor' tooltip="Quick View">
-                                                            <RemoveRedEyeOutlinedIcon/>
-                                                        </a>
-                                                    </li>
-                                                </ul>
+                                        <Link to={`/detail/${e.idProduct}`} style={{textDecoration: "none"}}>
+                                            <div className="imgWrapper">
+                                                <img
+                                                    src={e.productImage}
+                                                    alt="" className="w-100"/>
                                             </div>
-                                        </div>
 
-                                        <div className="info">
-                                            <h4 className='title'><Link to="/detail">{e.productName}</Link></h4>
+                                            <div className="info">
+                                                {/*{selectedItem.length>14 ? selectedItem.substr(0,14)+'...' :  selectedItem}*/}
+                                                <h4 className='title' title={e.productName}><Link to={`/detail/${e.idProduct}`}>{e.productName.length > 25 ? e.productName.substring(0,25)+'...' : e.productName}</Link></h4>
 
-                                            <div className='d-flex align-items-center mt-3'>
-                                                <div className='d-flex align-items-center w-100'>
+                                                <div className='d-flex align-items-center mt-3'>
+                                                    <div className='d-flex align-items-center w-100'>
                                                     <span className='price text-g font-weight-bold'>
-                                                        {e.productPrice.toLocaleString('vi', {style: 'currency', currency: 'VND'})} </span>
+                                                        {e.productPrice.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})} </span>
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            {/*<Button className='w-100 transition mt-3'><ShoppingCartOutlinedIcon/>*/}
-                                            {/*    Thêm vào giỏ hàng*/}
-                                            {/*</Button>*/}
-                                        </div>
+                                                {/*<Button className='w-100 transition mt-3'><ShoppingCartOutlinedIcon/>*/}
+                                                {/*    Thêm vào giỏ hàng*/}
+                                                {/*</Button>*/}
+                                            </div>
+                                        </Link>
                                     </div>
                                 </div>
-                            ))
+                            )) : (<div><p>Dữ liệu chưa được đưa vào</p></div>)
                         }
                     </div>
 

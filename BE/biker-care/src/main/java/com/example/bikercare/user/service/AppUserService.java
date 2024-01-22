@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -62,5 +63,10 @@ public class AppUserService implements IAppUserService{
     @Override
     public Boolean logout(String userName) {
         return appUserRepository.updateAppUserIsOffline(userName) > 0;
+    }
+
+    @Override
+    public Optional<AppUser> findUserByUsername(String username) {
+        return this.appUserRepository.findAppUserByUsername(username);
     }
 }

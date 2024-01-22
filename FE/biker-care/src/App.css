@@ -354,6 +354,28 @@ p {
     z-index: 10;
 }
 
+.sidebar .card .search {
+    width: 87%;
+    padding-left: 30px;
+    position: relative;
+}
+
+.sidebar .card .search input {
+    width: 100%;
+    height: 50px;
+    border: 0px;
+    outline: none !important;
+    font-size: 18px;
+}
+
+.sidebar .card .search .searchIcon {
+    position: absolute;
+    top: 12px;
+    right: 0px;
+    opacity: 0.5;
+    font-size: 30px !important;
+}
+
 .sidebarWrapper .sidebar {
     position: sticky;
     top: 110px;
@@ -375,7 +397,8 @@ p {
     cursor: pointer;
     margin: 10px 0px;
     border-radius: 4px;
-    transition: all 0.3s ease-in-out
+    transition: all 0.3s ease-in-out;
+    background: none;
 }
 
 .sidebarWrapper .sidebar .card .catList .catItem h4 {
@@ -444,7 +467,7 @@ p {
 }
 
 .rightContent .topStrip .tab_ {
-    width: 200px;
+    width: 300px;
 }
 
 .rightContent .topStrip .tab_ .btn_ {
@@ -573,7 +596,7 @@ ul.breadcrumb li a:hover {
 }
 
 .zoomSlider .slick-current .item {
-    border: 2px solid #3bb77e !important;
+    border: 2px solid #d20838 !important;
 }
 
 .zoomSlider .slick-arrow {

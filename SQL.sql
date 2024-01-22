@@ -4,7 +4,12 @@ insert into biker_care.app_role(flag_deleted, name_role) values (b'0', 'ROLE_CUS
 
 insert into biker_care.app_user(address, email, flag_deleted, flag_online, full_name, `password`, phone, username)
 values
-("123 Điện Biên Phủ", "nghiaphan33dn@gmail.com", b'0', b'1', "Nguyễn Phan Xuân Nghĩa", "$2a$12$kMJIhnWIZ28cfOh1yRaY.uutKY1SwlcknfoQVLv7W53T2OvtDi.aS", "0969980926", "nghiaphan");
+("123 Điện Biên Phủ", "nghiaphan33dn@gmail.com", b'0', b'1', "Nguyễn Phan Xuân Nghĩa", "$2a$12$kMJIhnWIZ28cfOh1yRaY.uutKY1SwlcknfoQVLv7W53T2OvtDi.aS", "0969980926", "nghiaphan"),
+("456 Ngô Thì Nhậm", "hiepnguyen1968dn@gmail.com", b'0', b'1', "Nguyễn Hiệp", "$2a$12$kMJIhnWIZ28cfOh1yRaY.uutKY1SwlcknfoQVLv7W53T2OvtDi.aS", "03692213311", "hiepnguyen"),
+("159 Nguyễn Huệ", "tranvandu41dn@gmail.com", b'0', b'1', "Trần Văn Dự", "$2a$12$kMJIhnWIZ28cfOh1yRaY.uutKY1SwlcknfoQVLv7W53T2OvtDi.aS", "0147521486", "duvan"),
+("68 Nguyễn Hoàng", "vanan@gmail.com", b'0', b'1', "Nguyễn Văn An", "$2a$12$kMJIhnWIZ28cfOh1yRaY.uutKY1SwlcknfoQVLv7W53T2OvtDi.aS", "0452136888", "vanan"),
+("68 Bùi Thị Xuân", "huunam@gmail.com", b'0', b'1', "Lê Hữu Nam", "$2a$12$kMJIhnWIZ28cfOh1yRaY.uutKY1SwlcknfoQVLv7W53T2OvtDi.aS", "0854752514", "huunam"),
+("99 Quang Trung", "huynhtan@gmail.com", b'0', b'1', "Phạm Huỳnh Tân", "$2a$12$kMJIhnWIZ28cfOh1yRaY.uutKY1SwlcknfoQVLv7W53T2OvtDi.aS", "06545587712", "huynhtan");
 
 insert into biker_care.user_role(app_role_id, app_user_id) values (1, 1);
 
@@ -15,6 +20,8 @@ insert into biker_care.type_product(name_type) values ("Giày Moto");
 insert into biker_care.type_product(name_type) values ("Balo - Túi Givi");
 insert into biker_care.type_product(name_type) values ("Áo Mưa Givi");
 insert into biker_care.type_product(name_type) values ("Thùng Givi");
+insert into biker_care.type_product(name_type) values ("Tai Nghe Bluetooth");
+
 
 
 insert into biker_care.product(`description`, flag_deleted, name_product, price, quantity, short_description, id_type) 
@@ -100,6 +107,27 @@ values ("https://firebasestorage.googleapis.com/v0/b/my-app-83bf7.appspot.com/o/
 ("https://firebasestorage.googleapis.com/v0/b/my-app-83bf7.appspot.com/o/biker-care%2Fproduct%2Fgiay-alpines%2Fgiay-mo-to-alpinestar.webp?alt=media&token=2544a3c5-10e7-4bc1-ab96-b77f4fc64d42", "13"),
 ("https://firebasestorage.googleapis.com/v0/b/my-app-83bf7.appspot.com/o/biker-care%2Fproduct%2Fgiay-ls2-acrux%2Fgiay-moto-ls2-acrux-chinh-hang.webp?alt=media&token=08f5205c-41f3-4163-80b7-d1cb13a5a3aa", "14");
 
+insert into biker_care.cart_detail (quantity_per_product, app_user_id, id_product) 
+values 
+(3, 1, 1),
+(4, 1, 2),
+(5, 1, 3),
+(7, 1, 5);
+insert into biker_care.cart_detail (quantity_per_product, app_user_id, id_product) values (8, 1, 9);
+
+insert into orders(date_time, order_code, app_user_id)
+values
+('2023-12-07 14:30:00', "DSOD-00021", "1"),
+('2023-12-07 15:45:00', "DSOD-00301", "1"),
+('2023-12-07 12:15:00', "DSOD-00401", "1"),
+('2023-12-07 11:45:00', "DSOD-00501", "1"),
+('2023-12-07 07:40:00', "DSOD-00201", "2"),
+('2023-12-07 15:45:00', "DSOD-002101", "2"),
+('2023-12-07 15:25:00', "DSOD-00012", "2"),
+('2023-12-07 15:45:00', "DSOD-00015", "2");
+
+
+
 
 
 SELECT DISTINCT p.id_product AS idProduct, p.name_product AS productName, 
@@ -147,6 +175,47 @@ type_product t ON p.id_type = t.id_type
 GROUP BY 
 p.id_product, p.name_product, p.price, t.name_type 
 ORDER BY SUM(od.quantity) DESC LIMIT 20;
+
+-- Lấy ra danh sách sản phẩm để tìm kiếm theo tên sản phẩm
+SELECT DISTINCT p.id_product AS idProduct, p.name_product AS productName,
+p.price AS productPrice, p.description as productDescription,
+MIN(i.image_path) AS productImage
+FROM product p
+JOIN image i ON p.id_product = i.id_product
+WHERE p.name_product like CONCAT('%','mô tô','%')
+GROUP BY p.id_product ORDER BY p.id_product desc LIMIT 10;
+
+-- Liệt kê cart với user và product tương ứng
+select c.id as idCart, 
+u.full_name as fullName, 
+u.address as address, 
+u.phone as phoneNumber, 
+p.name_product as productName, 
+p.price as productPrice, 
+c.quantity_per_product as productQuantity, 
+p.id_product as productId, 
+MIN(i.image_path) as productImage 
+from cart_detail c 
+join app_user u on c.app_user_id = u.id 
+join product p on p.id_product = c.id_product 
+left join image i on i.id_product = p.id_product 
+where u.username = "nghiaphan" 
+group by c.id;
+
+-- Lấy ra cart với thông tin đầu vào là username và idProduct
+select c.id, c.quantity_per_product, c.app_user_id, c.id_product 
+from cart_detail c 
+left join app_user u 
+on c.app_user_id = u.id 
+where u.username = "nghiaphan" and c.id_product = "1";
+
+-- Xóa bản ghi cart với thông tin đầu vào là username và idProduct
+delete c.* 
+from cart_detail c 
+left join app_user u 
+on c.app_user_id = u.id 
+where u.username = "nghiaphan" 
+and c.id_product = "2";
 
 
 

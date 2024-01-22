@@ -21,40 +21,9 @@ public class ProductController {
     @Autowired
     private IProductService productService;
 
-    @GetMapping("/list")
-    public ResponseEntity<Page<IProductDto>> pageProduct(@RequestParam(defaultValue = "0", required = false) Integer page,
-                                                         @RequestParam(defaultValue = "", required = false) Integer limit,
-                                                         @RequestParam(defaultValue = "", required = false) String searchProduct,
-                                                         @RequestParam(defaultValue = "", required = false) String search,
-                                                         @RequestParam(defaultValue = "", required = false) String conditional) {
-        Pageable pageable = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "idProduct"));
-        Page<IProductDto> products;
-        switch (searchProduct) {
-            case "nameProduct":
-                products = productService.searchByName(pageable, search);
-                break;
-            case "nameType":
-                products = productService.searchByType(pageable, search);
-                break;
-            case "searchByPrice":
-                products = productService.searchByPrice(pageable, search, conditional);
-                if (conditional.equals("")) {
-                    return new ResponseEntity<>(products, HttpStatus.NO_CONTENT);
-                }
-                break;
-            default:
-                products = productService.findAllProduct(pageable, search);
-                break;
-        }
-        if (products.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(products, HttpStatus.OK);
-    }
-
     @GetMapping("/get-list")
     public ResponseEntity<List<IProductWithImage>> productList(@RequestParam(defaultValue = "", required = false) String nameSearch) {
-        List<IProductWithImage> products = productService.getAll(nameSearch);
+        List<IProductWithImage> products = productService.getAllProductForHomePage(nameSearch);
         if (products.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -87,5 +56,32 @@ public class ProductController {
         detailResponse.setImages(imageDtoList);
 
         return new ResponseEntity<>(detailResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/listing")
+    @ResponseBody
+    public ResponseEntity<?> getProductForListingPage(@RequestParam(defaultValue = "0",required = false) Integer page,
+                                                      @RequestParam(defaultValue = "5",required = false) Integer limit,
+                                                      @RequestParam(defaultValue = "",required = false) String nameProduct,
+                                                      @RequestParam(defaultValue = "",required = false) String nameType,
+                                                      @RequestParam(defaultValue = "desc",required = false) String sort,
+                                                      @RequestParam(defaultValue = "idProduct",required = false) String sortBy) {
+
+        Sort sortProduct = Sort.by(Sort.Direction.fromString(sort),sortBy);
+        Pageable pageable = PageRequest.of(page,limit,sortProduct);
+        Page<ProductForListingPageDto> product = productService.getAllProductWithFilter(nameProduct, nameType, pageable);
+        if (product == null){
+            return new ResponseEntity<>("Không tìm thấy sản phẩm yêu cầu",HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(product,HttpStatus.OK);
+    }
+
+    @GetMapping("/product-by-type/{idType}")
+    public ResponseEntity<List<IProductWithImage>> getProductByIdType(@PathVariable Long idType) {
+        List<IProductWithImage> products = productService.getProductByIdType(idType);
+        if (products == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 }

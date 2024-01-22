@@ -9,16 +9,18 @@ const NotFound = () => {
         <section className='notFound'>
             <div className="container-fluid">
                 <div className='box'>
-                    <img src={NotFoundImg} />
+                    <img src={NotFoundImg} alt="NotFoundImg"/>
                     <br /><br />
-                    <h1>Page Not Found</h1>
-                    <p>The link you clicked may be broken or the page may have been removed.
-                        visit the Homepage or Contact us about the problem</p>
+                    <h1>Không tìm thấy trang</h1>
+                    <p>
+                        Trang bạn đang truy cập không tồn tại.
+                        Vui lòng quay lại trang chủ hoặc liên hệ với chúng tôi để báo cáo sự cố trên
+                    </p>
                     <br />
 
 
                     <div className='d-flex'>
-                        <Button className='btn-g btn-lg m-auto'><Link to={'/'}>Back to Home Page</Link></Button>
+                        <Button className='btn-g btn-lg m-auto'><Link to={'/home'}>Quay trở về trang chủ</Link></Button>
                     </div>
 
                 </div>

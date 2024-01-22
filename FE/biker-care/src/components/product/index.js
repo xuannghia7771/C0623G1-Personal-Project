@@ -28,27 +28,7 @@ const Product = ({id, nameProduct, price}) => {
     return (
         <div className='productThumb'>
             <div className="imgWrapper">
-                <img src="https://firebasestorage.googleapis.com/v0/b/my-app-83bf7.appspot.com/o/biker-care%2Fproduct%2Fgang-tay-alpinestar%2Fgang-tay-alpinestars-smx-1-v2.webp?alt=media&token=b3bb80df-2f38-47f5-9537-b6231e0c0afb" alt="" className="w-100"/>
-
-                <div className='overlay transition'>
-                    <ul className='list list-inline mb-0'>
-                        <li className='list-inline-item'>
-                            <a className='cursor' tooltip="Add to Wishlist">
-                                <FavoriteBorderOutlinedIcon />
-                            </a>
-                        </li>
-                        <li className='list-inline-item'>
-                            <a className='cursor' tooltip="Compare">
-                                <CompareArrowsOutlinedIcon />
-                            </a>
-                        </li>
-                        <li className='list-inline-item'>
-                            <a className='cursor' tooltip="Quick View">
-                                <RemoveRedEyeOutlinedIcon />
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                <img src="https://firebasestorage.googleapis.com/v0/b/my-app-83bf7.appspot.com/o/g1YDojF9F0qKs2cJ3RObDg.jpg?alt=media&token=0ea16ee2-692c-425a-a76c-233cacfa9811" alt="" className="w-100"/>
             </div>
 
             <div className="info">
