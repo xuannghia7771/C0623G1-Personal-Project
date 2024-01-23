@@ -25,4 +25,11 @@ public class OrdersDetail {
     @ManyToOne
     @JoinColumn(name = "id_product",referencedColumnName = "idProduct")
     private Product product;
+
+    public OrdersDetail(Integer quantity, Long totalPrice, Orders orders, Product product) {
+        this.quantity = quantity;
+        this.totalPrice = totalPrice;
+        this.orders = orders;
+        this.product = product;
+    }
 }

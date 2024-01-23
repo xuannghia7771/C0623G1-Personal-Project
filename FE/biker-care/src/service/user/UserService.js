@@ -18,8 +18,8 @@ export const registerUser = async (appUser) => {
 export const infoAppUserByJwtToken = () => {
     const jwtToken = localStorage.getItem("JWT");
     if (jwtToken) {
-        const result = jwtDecode(jwtToken).sub;
-        return result;
+        const result = jwtDecode(jwtToken);
+        return result.sub;
     }
 }
 

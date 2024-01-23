@@ -28,4 +28,10 @@ public class Orders {
         this.orderCode = orderCode;
         this.dateTime = dateTime;
     }
+
+    public Orders(String orderCode, String dateTime, AppUser appUser) {
+        this.orderCode = orderCode;
+        this.dateTime = dateTime;
+        this.appUser = appUser;
+    }
 }

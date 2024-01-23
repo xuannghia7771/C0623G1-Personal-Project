@@ -6,7 +6,6 @@ import IconCart from '../../assets/images/icon-cart.svg';
 import IconUser from '../../assets/images/icon-user.svg';
 
 import Button from '@mui/material/Button';
-import {getCartFromAPI} from "../../provider/actions";
 
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
@@ -21,14 +20,13 @@ import {useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
 import * as userService from "../../service/user/UserService"
 import Swal from "sweetalert2";
+import {getCart} from "../../service/cart/CartService";
+import {getCartFromAPI} from "../../provider/actions";
 
 const Header = (props) => {
 
     const [isOpenDropDown, setisOpenDropDown] = useState(false);
     const [isOpenAccDropDown, setisOpenAccDropDown] = useState(false);
-
-    const headerRef = useRef();
-    const searchInput = useRef()
 
     const history = useNavigate();
 
@@ -41,6 +39,7 @@ const Header = (props) => {
     const cartInit = useSelector((state) => state.reducers);
     const totalItem = useSelector((state) => state.reducers.totalItem);
 
+
     const getUserName = async () => {
         const result = await userService.infoAppUserByJwtToken();
         setUsername(result);
@@ -51,7 +50,7 @@ const Header = (props) => {
     useEffect(() => {
         getUserName();
         dispatch(getCartFromAPI());
-    }, [])
+    }, [totalItem])
 
     const handleLogout = () => {
         localStorage.removeItem("JWT");
@@ -69,7 +68,7 @@ const Header = (props) => {
 
     return (
         <>
-            <div className='headerWrapper' ref={headerRef}>
+            <div className='headerWrapper'>
                 <header>
                     <div className='container-fluid'>
                         <div className='row'>
@@ -130,8 +129,8 @@ const Header = (props) => {
                                                         {
                                                             isOpenDropDown !== false &&
                                                             <ul className='dropdownMenu'>
-                                                                <li><Button><LocationOnOutlinedIcon/> Lịch sử mua
-                                                                    hàng</Button></li>
+                                                                <li><Link to={`/order`}><Button><LocationOnOutlinedIcon/> Lịch sử mua
+                                                                    hàng</Button></Link></li>
                                                                 <li><Button><SettingsOutlinedIcon/> Cài đặt</Button>
                                                                 </li>
                                                                 <li><Button

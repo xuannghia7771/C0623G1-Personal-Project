@@ -61,7 +61,7 @@ public class ProductController {
     @GetMapping("/listing")
     @ResponseBody
     public ResponseEntity<?> getProductForListingPage(@RequestParam(defaultValue = "0",required = false) Integer page,
-                                                      @RequestParam(defaultValue = "5",required = false) Integer limit,
+                                                      @RequestParam(defaultValue = "8",required = false) Integer limit,
                                                       @RequestParam(defaultValue = "",required = false) String nameProduct,
                                                       @RequestParam(defaultValue = "",required = false) String nameType,
                                                       @RequestParam(defaultValue = "desc",required = false) String sort,
@@ -70,10 +70,11 @@ public class ProductController {
         Sort sortProduct = Sort.by(Sort.Direction.fromString(sort),sortBy);
         Pageable pageable = PageRequest.of(page,limit,sortProduct);
         Page<ProductForListingPageDto> product = productService.getAllProductWithFilter(nameProduct, nameType, pageable);
-        if (product == null){
+        if (product == null) {
             return new ResponseEntity<>("Không tìm thấy sản phẩm yêu cầu",HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(product,HttpStatus.OK);
+
     }
 
     @GetMapping("/product-by-type/{idType}")

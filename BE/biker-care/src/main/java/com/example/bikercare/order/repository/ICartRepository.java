@@ -48,4 +48,14 @@ public interface ICartRepository extends JpaRepository<CartDetail, Long> {
             "where u.username = :username " +
             "and c.id_product = :idProduct", nativeQuery = true)
     void removeByUserAndProduct(@Param("username") String username, @Param("idProduct") Long idProduct);
+
+    @Transactional
+    @Modifying
+    @Query(value =
+            " delete cart_detail.* \n" +
+                    "from cart_detail \n" +
+                    "left join app_user \n" +
+                    "on cart_detail.app_user_id = app_user.id \n" +
+                    "where app_user.username = :username ", nativeQuery = true)
+    void removeByUser(@Param("username") String username);
 }

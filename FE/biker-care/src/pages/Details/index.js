@@ -1,38 +1,25 @@
 import React, {useContext, useState, useRef, useEffect} from 'react';
-import {Link, useParams} from 'react-router-dom';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import Rating from '@mui/material/Rating';
 import InnerImageZoom from 'react-inner-image-zoom';
 import 'react-inner-image-zoom/lib/InnerImageZoom/styles.css';
 import Slider from "react-slick";
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {Button} from '@mui/material';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import "./productDetail.css";
-
-import Product from '../../components/product';
-import axios from 'axios';
-import {isAction} from "redux";
-import Sidebar from "../../components/Sidebar";
+import {toast} from "react-toastify";
+import * as userService from "../../service/user/UserService";
 import * as productService from "../../service/product/ProductService";
-import CompareArrowsOutlinedIcon from "@mui/icons-material/CompareArrowsOutlined";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import {getProductsByIdType} from "../../service/product/ProductService";
+import {addToCart} from "../../provider/actions";
+import {useDispatch} from "react-redux";
 
 
 const DetailsPage = (props) => {
-    const [zoomImage, setZoomImage] = useState("https://firebasestorage.googleapis.com/v0/b/my-app-83bf7.appspot.com/o/biker-care%2F17ZUtp9vEkeVg3ZypOBRA.jpg?alt=media&token=b02a0c5b-eedd-48ab-be09-ac3f7fd27fcc")
-
-
-    const [activeSize, setActiveSize] = useState(2);
-
     const [inputValue, setInputValue] = useState(1);
-
-    const [borderImg, setBorderImg] = useState(0);
-
+    const flag = userService.getAccessToken() !== null;
     const zoomSlider = useRef();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const {idProduct} = useParams();
     const [productDetail, setProductDetail] = useState({})
@@ -64,7 +51,7 @@ const DetailsPage = (props) => {
     useEffect(() => {
         getProductByProductId();
         getProductByIdType();
-    }, [idProduct, idTypeForRelatedProduct]);
+    }, [idProduct, idTypeForRelatedProduct, inputValue]);
 
     const getProductByProductId = async () => {
         const res = await productService.getProductDetailById(idProduct);
@@ -77,15 +64,15 @@ const DetailsPage = (props) => {
         } else {
             alert("Khong lay dc du lieu")
         }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    console.log(idTypeForRelatedProduct);
+    // console.log(idTypeForRelatedProduct);
     const getProductByIdType = async () => {
         const res = await productService.getProductsByIdType(idTypeForRelatedProduct);
         setProductByIdType(res.data);
+        // window.scrollTo({top: 0, behavior: 'smooth'});
     }
-    console.log(productByIdType);
+    // console.log(productByIdType);
 
 
     // console.log(selectedImage);
@@ -93,25 +80,36 @@ const DetailsPage = (props) => {
 
     const chooseImage = (index) => {
         setSelectedImage(listImageByProduct[index].imagePath);
-        setBorderImg(index);
     }
 
-    const plus = () => {
-        setInputValue(inputValue + 1);
-    }
-
-    const minus = () => {
-        if (inputValue !== 1) {
-            setInputValue(inputValue - 1)
+    const plusQuantity = () => {
+        console.log(inputValue)
+        if (inputValue > productDetail.productQuantity) {
+            toast.warn("Bạn đã nhập quá số lượng sản phẩm hiện có!");
+        } else {
+            setInputValue(inputValue + 1);
         }
     }
 
-    function convertVietnameseUnitPrice(e) {
-        const floatPrice = parseFloat(e);
-        const vietNamesePrice = floatPrice.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
-
-        return vietNamesePrice;
+    const minusQuantity = () => {
+        if (inputValue > 1) {
+            setInputValue(inputValue - 1);
+        } else {
+            toast.warn("Số lượng sản phẩm không hợp lệ!");
+        }
     }
+
+    const handleAddProductToCart = async () => {
+        if (flag) {
+            const username = userService.infoAppUserByJwtToken();
+            dispatch(addToCart(username, idProduct, inputValue));
+            toast.success("Thêm vào giỏ hàng thành công!");
+        } else {
+            toast.success("Vui lòng đăng nhập để thêm được sản phẩm!");
+            navigate("/signIn");
+        }
+    }
+
 
     // console.log(typeof productDetail.productPrice);
     // console.log(convertVietnameseUnitPrice(productDetail.productPrice));
@@ -120,6 +118,10 @@ const DetailsPage = (props) => {
         const vietNamesePrice = floatPrice.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
 
         return vietNamesePrice;
+    }
+
+    if (!productDetail) {
+        return null;
     }
 
     return (
@@ -197,12 +199,21 @@ const DetailsPage = (props) => {
                         </div>
 
                         <div className="addCartSection pt-4 pb-4 d-flex align-items-center">
-                            <button className="btn btn-primary" style={{marginRight: 10 + "px", backgroundColor: "#3bb77e", outline: 'none'}}> -</button>
-                            <input type="number" className="quantity-input"/>
-                            <button className="btn btn-primary" style={{marginLeft: 10 + "px", backgroundColor: "#3bb77e", outline: 'none'}}> +</button>
+                            <button className="btn btn-primary"
+                                    style={{marginRight: 10 + "px", backgroundColor: "#3bb77e", outline: 'none'}}
+                                    onClick={minusQuantity}
+                            > -
+                            </button>
+                            <input type="number" className="quantity-input" value={inputValue}/>
+                            <button className="btn btn-primary"
+                                    style={{marginLeft: 10 + "px", backgroundColor: "#3bb77e", outline: 'none'}}
+                                    onClick={plusQuantity}
+                            > +
+                            </button>
                         </div>
 
-                        <Button className="btn-g btn-lg addtocartbtn"><ShoppingCartOutlinedIcon/>Thêm vào giỏ
+                        <Button onClick={handleAddProductToCart}
+                                className="btn-g btn-lg addtocartbtn"><ShoppingCartOutlinedIcon/>Thêm vào giỏ
                             hàng</Button>
                     </div>
                     {/* product info ends here */}

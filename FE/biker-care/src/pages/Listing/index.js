@@ -28,7 +28,7 @@ const Listing = () => {
     const [sortBy, setSortBy] = useState("idProduct");
     const [sort, setSort] = useState("");
     const [currentPage, setCurrentPage] = useState(0);
-    const [limit, setLimit] = useState(5);
+    const [limit, setLimit] = useState(8);
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
 
@@ -106,13 +106,15 @@ const Listing = () => {
     // Phân trang - end
 
     function convertVietnameseUnitPrice(e) {
+
         const floatPrice = parseFloat(e);
         const vietNamesePrice = floatPrice.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
 
         return vietNamesePrice;
+
     }
 
-    console.log(productList);
+    // console.log(productList);
 
     return (
         <section className="listingPage">
@@ -205,7 +207,6 @@ const Listing = () => {
 
                             <div className="productRow pl-4 pr-3">
                                 {
-                                    productList.length === 0 ? <HavingNoResult/> :
                                     productList.map((e, index) => (
                                         <div className="item" key={index}>
 
@@ -230,10 +231,10 @@ const Listing = () => {
                                                         </div>
                                                     </div>
                                                 </Link>
-                                                <Button
-                                                    className='w-100 transition mt-3'><ShoppingCartOutlinedIcon/>
-                                                    Thêm vào giỏ hàng
-                                                </Button>
+                                                {/*<Button*/}
+                                                {/*    className='w-100 transition mt-3'><ShoppingCartOutlinedIcon/>*/}
+                                                {/*    Thêm vào giỏ hàng*/}
+                                                {/*</Button>*/}
                                             </div>
                                         </div>
                                     ))

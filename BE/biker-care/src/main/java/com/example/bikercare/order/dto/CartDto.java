@@ -9,5 +9,5 @@ public interface CartDto {
     Long getProductPrice();
     String getProductQuantity();
     String getProductImage();
-    Integer getProductId();
+    Long getProductId();
 }

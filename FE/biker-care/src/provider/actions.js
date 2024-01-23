@@ -1,4 +1,4 @@
-import * as cartService from "../service/cart/CartService";
+import * as cartService from '../service/cart/CartService';
 import {getAccessToken} from "../service/user/UserService";
 
 const getCartFromAPI = () => async (dispatch) => {
@@ -17,7 +17,7 @@ const getCartFromAPI = () => async (dispatch) => {
             })
         }
     } catch (err) {
-        alert("Lỗi "+ err);
+        alert("Can't get cart " + err);
     }
 }
 
@@ -30,19 +30,15 @@ const addToCart = (username, productId, productQuantity) => async (dispatch) => 
             payload: username, productId, productQuantity,
         })
     } catch (err) {
-        alert("Lỗi "+ err);
+        alert("Can't add to cart " + err);
     }
 };
 
 const minusFromCart = (username, productId, productQuantity) => async (dispatch) => {
     const curCart = await cartService.getCart();
     let curQty = 0;
-    curCart.map(item => {
-        if (item.productId === productId) {
-            curQty = item.productQuantity;
-        }
-    });
-
+    let temp = curCart.filter((item) => item.productId === productId);
+    curQty = temp[0].productQuantity;
     if (curQty > 1) {
         try {
             await cartService.minusProductFromCart(username,
@@ -53,7 +49,7 @@ const minusFromCart = (username, productId, productQuantity) => async (dispatch)
                 payload: newCart,
             })
         } catch (err) {
-            alert("Lỗi "+ err);
+            alert("Không giảm số lượng đươc: "+err);
         }
     } else {
         const oldCart = await cartService.getCart();
@@ -71,7 +67,7 @@ const removeProducts = (username, productId) => async (dispatch) => {
             type: REMOVE_ITEMS,
         })
     } catch (err) {
-        alert("Lỗi "+ err);
+        alert("Can't remove product " + err);
     }
 };
 

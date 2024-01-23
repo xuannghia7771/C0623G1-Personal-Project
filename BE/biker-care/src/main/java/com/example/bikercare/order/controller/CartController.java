@@ -1,6 +1,7 @@
 package com.example.bikercare.order.controller;
 
 import com.example.bikercare.order.dto.CartDto;
+import com.example.bikercare.order.dto.OrderPayDto;
 import com.example.bikercare.order.service.ICartService;
 import com.example.bikercare.user.model.AppUser;
 import com.example.bikercare.user.service.IAppUserService;
@@ -95,5 +96,17 @@ public class CartController {
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping("/pay")
+    public ResponseEntity<?> cartPay(
+            @RequestBody OrderPayDto orderPayDto) {
+
+        boolean flag = this.cartService.cartPay(orderPayDto);
+
+        if (flag) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

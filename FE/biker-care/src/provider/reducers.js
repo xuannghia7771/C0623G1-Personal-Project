@@ -1,7 +1,6 @@
 import {ADD_ITEMS, GET_CART_FROM_API, MINUS_ITEMS, PAY_CART, REMOVE_ITEMS} from "./actions";
 import {combineReducers} from "redux";
 
-
 const initialState = {
     productArr: [],
     totalItem: 0,
@@ -11,6 +10,7 @@ const initialState = {
 };
 
 const reducers = (state = initialState, action) => {
+
     switch (action.type) {
         case GET_CART_FROM_API:
             const items = action.payload.length;

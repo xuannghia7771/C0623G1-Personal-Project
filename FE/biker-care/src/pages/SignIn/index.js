@@ -109,13 +109,15 @@ const SignIn = () => {
                             <h3>Đăng Nhập</h3>
                             <Form className="mt-4">
                                 <div className='form-group mb-4 w-100'>
+                                    <label htmlFor="username" className="labelForField">Tên đăng nhập</label>
                                     <Field id="username" type="text" name='username' label="Tên đăng nhập"
-                                               className='w-100'/>
+                                               className='w-100 inputField'/>
                                 </div>
                                 <div className='form-group mb-4 w-100'>
                                     <div className='position-relative'>
+                                        <label htmlFor="password" className="labelForField">Mật khẩu</label>
                                         <Field id="password" type={showPassword === false ? 'password' : 'text'}
-                                                   name='password' label="Mật khẩu" className='w-100'/>
+                                                   name='password' label="Mật khẩu" className='w-100 inputField'/>
                                         <Button className='icon' onClick={() => setShowPassword(!showPassword)}>
                                             {
                                                 showPassword === false ? <VisibilityOffOutlinedIcon/> :
@@ -127,7 +129,7 @@ const SignIn = () => {
 
 
                                 <div className='form-group mt-5 mb-4 w-100'>
-                                    <button type="submit" className='btn btn-g btn-lg w-100'>Đăng nhập</button>
+                                    <Button type="submit" className='btn btn-g btn-lg w-100'>Đăng nhập</Button>
                                 </div>
 
 
@@ -138,10 +140,10 @@ const SignIn = () => {
                                 {/*</div>*/}
 
 
-                                <p className='text-center'>Bạn chưa có tài khoản
-                                    <b> <Link to="/signup">Đăng kí</Link>
-                                    </b>
-                                </p>
+                                {/*<p className='text-center'>Bạn chưa có tài khoản*/}
+                                {/*    <b> <Link to="/signup">Đăng kí</Link>*/}
+                                {/*    </b>*/}
+                                {/*</p>*/}
 
                             </Form>
                         </div>

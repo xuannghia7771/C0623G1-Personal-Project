@@ -9,7 +9,7 @@ export const getCart = async () => {
         const res = await axios.get(`${BASE_API}/${username}`);
         return res.data;
     } catch (e) {
-        alert(e);
+        alert("Lỗi fetching: " + e);
     }
 }
 
@@ -18,7 +18,7 @@ export const addNewProductToCart = async (username, idProduct, quantityPerProduc
         const res = await axios.get(BASE_API + `/${username}/${idProduct}/${quantityPerProduct}`);
         return res.status;
     } catch (e) {
-        alert(e);
+        alert("Lỗi fetching: " + e);
     }
 }
 
@@ -27,7 +27,7 @@ export const minusProductFromCart = async (username, idProduct, quantityPerProdu
         const res = await axios.get(BASE_API + `/remove/${username}/${idProduct}/${quantityPerProduct}`);
         return res.status;
     } catch (e) {
-        alert(e);
+        alert("Lỗi 'minus product': " + e);
     }
 }
 
@@ -36,7 +36,19 @@ export const removeProductFromCart = async (username, idProduct) => {
         const res = await axios.delete(BASE_API + `/${username}/${idProduct}`);
         return res.status;
     } catch (e) {
-        alert(e);
+        alert("Lỗi fetching: " + e);
+    }
+}
+
+export const payCart = async () => {
+    try {
+        const username = infoAppUserByJwtToken();
+        const orderPayDto = {
+            username: username,
+        }
+        return await axios.post(BASE_API + `/pay`, orderPayDto);
+    } catch (err) {
+        alert("Lỗi không thực hiện được hàm 'payCart': " + err);
     }
 }
 
